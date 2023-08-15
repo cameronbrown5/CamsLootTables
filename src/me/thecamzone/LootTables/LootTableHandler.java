@@ -41,17 +41,19 @@ public class LootTableHandler {
 			for(String lootItemEntry : lootTableItem) {
 				String[] lootItemInfo = lootItemEntry.split(" ");
 				
+				boolean failed = false;
+				
 				if(lootItemInfo.length < 3) {
 					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
 					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Invalid item entry for \"" + lootTableName + "\".");
 					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Invalid entry:");
 					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] \"" + lootItemEntry + "\"");
-					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Correct syntax: \"<Amount> <Item> <Chance>\"");
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Correct syntax: \"<Quantity> <Item> <Chance> <QuantityChance> [Spread (true/false)]\"");
 					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
-					return;
+					failed = true;
 				}
 				
-				Integer lootItemAmount;
+				Integer lootItemAmount = 0;
 				try {
 					lootItemAmount = Integer.parseInt(lootItemInfo[0]);
 				} catch (NumberFormatException e) {
@@ -61,7 +63,7 @@ public class LootTableHandler {
 					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Invalid entry:");
 					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] \"" + lootItemEntry + "\"");
 					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
-					return;
+					failed = true;
 				}
 				
 				String[] lootItemStackInfo = lootItemInfo[1].split(":");
@@ -69,6 +71,11 @@ public class LootTableHandler {
 				String materialName;
 				
 				if(lootItemStackInfo.length == 0) {
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Invalid item entry for \"" + lootTableName + "\".");
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Invalid entry:");
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] \"" + lootItemStackInfo + "\"");
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
 					return;
 				}
 				else if(lootItemStackInfo.length == 2) {
@@ -90,7 +97,7 @@ public class LootTableHandler {
 						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Invalid entry:");
 						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] \"" + lootItemEntry + "\"");
 						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
-						return;
+						failed = true;
 					}
 					
 					item = new ItemStack(material);
@@ -103,15 +110,13 @@ public class LootTableHandler {
 						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Invalid entry:");
 						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] \"" + lootItemEntry + "\"");
 						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
-						return;
+						failed = true;
 					}
 					
 					item = stack.getItemStack();
 				}
 				
-				item.setAmount(lootItemAmount);
-				
-				Double chance;
+				Double chance = 0D;
 				try {
 					chance = Double.parseDouble(lootItemInfo[2].replace("%", ""));
 				} catch (NumberFormatException e) {
@@ -121,10 +126,36 @@ public class LootTableHandler {
 					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Invalid entry:");
 					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] \"" + lootItemEntry + "\"");
 					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
-					return;
+					failed = true;
 				}
 				
-				ItemStackChance itemStackChance = new ItemStackChance(item, chance);
+				Double quantityChance = 100D;
+				if(lootItemAmount > 1) {
+					try {
+						quantityChance = Double.parseDouble(lootItemInfo[3].replace("%", ""));
+					} catch (NumberFormatException e) {
+						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Invalid item entry for \"" + lootTableName + "\".");
+						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] \"" + lootItemInfo[3] + "\" is not a valid double.");
+						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] If the item quantity is greater than 1, you must specify a quantity chance.");
+						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Correct syntax: \"<Quantity> <Item> <Chance> <QuantityChance> [Spread (true/false)]\"");
+						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Invalid entry:");
+						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] \"" + lootItemEntry + "\"");
+						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+						failed = true;
+					}
+				}
+				
+				if(failed) {
+					continue;
+				}
+				
+				Boolean spread = false;
+				if(lootItemInfo.length == 5) {
+					spread = Boolean.parseBoolean(lootItemInfo[4]);
+				}
+				
+				ItemStackChance itemStackChance = new ItemStackChance(item, lootItemAmount, chance, quantityChance, spread);
 				lootTable.addItem(itemStackChance);
 			}
 			

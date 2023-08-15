@@ -10,7 +10,7 @@ import me.thecamzone.Utils.ChunkUtil;
 import me.thecamzone.Utils.SignUtils;
 
 public class OnChunkGeneration implements Listener {
-
+	
 	@EventHandler
 	public void onChunkLoad(ChunkLoadEvent e) {
 		Chunk chunk = e.getChunk();
