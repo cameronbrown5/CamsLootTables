@@ -1,0 +1,15 @@
+main: me.thecamzone.CamsLootTables
+name: CamsLootTables
+version: 0.0.2
+description: Provides gameplay mechanics for MCRPG.
+api-version: 1.19
+author: TheCamZone
+depend: [ItemsAdder]
+
+commands:
+  loottable:
+    description: Main command for administrators
+    aliases: [lt, loottables]
+    permission: camsloottables.loottable
+    permission-message: "Unknown command. Type \"/help\" for help."
+    usage: /<command>
