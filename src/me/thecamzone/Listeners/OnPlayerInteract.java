@@ -68,7 +68,7 @@ public class OnPlayerInteract implements Listener {
 		if(SignUtils.replaceSign(sign)) {
 			player.sendMessage(ChatColor.GREEN + "Successfully created a LootTable chest.");
 		} else {
-			player.sendMessage(ChatColor.RED + "Could not create a LootTable chest.");
+			player.sendMessage(ChatColor.RED + "Could not create a LootTable chest. Check console for information.");
 		}
 	}
 	
