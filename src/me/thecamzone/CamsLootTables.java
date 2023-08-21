@@ -3,10 +3,11 @@ package me.thecamzone;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.ipvp.canvas.MenuFunctionListener;
 
 import me.thecamzone.Commands.CommandCompleter;
 import me.thecamzone.Commands.CommandDebug;
@@ -20,12 +21,16 @@ import me.thecamzone.Listeners.OnInventoryInteract;
 import me.thecamzone.Listeners.OnItemsAdderLoaded;
 import me.thecamzone.Listeners.OnPlayerInteract;
 import me.thecamzone.LootTables.LootTableHandler;
-import me.thecamzone.Utils.DataFile;
+import me.thecamzone.Rarities.RarityHandler;
+import me.thecamzone.Rarities.RarityItemHandler;
+import me.thecamzone.Utils.LootTablesFile;
 
 public class CamsLootTables extends JavaPlugin {
 
 	private static CamsLootTables plugin;
 	private final Map<String, LootTableCommand> subcommands = new LinkedHashMap<>();
+	
+	private final NamespacedKey RARITY_ITEM_KEY = new NamespacedKey(this, "rarity_item");
 	
 	private CommandCompleter commandCompleter;
 	
@@ -33,7 +38,7 @@ public class CamsLootTables extends JavaPlugin {
 	public void onEnable() {
 		plugin = this;
 		
-		DataFile.setup();
+		LootTablesFile.setup();
 		
 		configureFiles();
 		registerCommands();
@@ -65,6 +70,22 @@ public class CamsLootTables extends JavaPlugin {
 		this.subcommands.put("help", new CommandHelp());
 		getCommand("loottable").setExecutor((CommandExecutor) new CommandRunner());
 		getCommand("loottable").setTabCompleter((TabCompleter) new CommandCompleter(this));
+	}
+	
+	public NamespacedKey getRarityItemKey() {
+		return RARITY_ITEM_KEY;
+	}
+	
+	public void loadHandlers() {
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
+
+            @Override
+            public void run() {
+            	RarityHandler.getInstance().load();
+        		RarityItemHandler.getInstance().load();
+        		LootTableHandler.getInstance().load();
+            }
+        },1L);
 	}
 	
 	public Map<String, LootTableCommand> getSubcommands() {

@@ -1,0 +1,16 @@
+rarities:
+  poor:
+    display-name: "&7Poor"
+    chance: 40
+  common:
+    display-name: "&aCommon"
+    chance: 30
+  uncommon:
+    display-name: "&9Uncommon"
+    chance: 15
+  rare:
+    display-name: "&dRare"
+    chance: 10
+  flawless:
+    display-name: "&eFlawless"
+    chance: 5

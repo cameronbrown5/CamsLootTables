@@ -10,9 +10,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import me.thecamzone.CamsLootTables;
 
-public class LootTablesFile {
+public class ItemsFile {
 
-	private static String fileName = "loottables.yml";
+	private static String fileName = "items.yml";
 	private static File file;
 	private static FileConfiguration customFile;
 	

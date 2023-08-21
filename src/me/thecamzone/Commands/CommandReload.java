@@ -2,8 +2,9 @@ package me.thecamzone.Commands;
 
 import org.bukkit.command.CommandSender;
 
-import me.thecamzone.LootTables.LootTableHandler;
-import me.thecamzone.Utils.DataFile;
+import me.thecamzone.CamsLootTables;
+import me.thecamzone.Utils.ItemsFile;
+import me.thecamzone.Utils.LootTablesFile;
 import me.thecamzone.Utils.Messager;
 import net.md_5.bungee.api.ChatColor;
 
@@ -19,8 +20,11 @@ public class CommandReload extends LootTableCommand {
 	}
 
 	public void execute(CommandSender sender, String[] args) {
-		DataFile.reload();
-		LootTableHandler.getInstance().load();
+		CamsLootTables.getInstance().reloadConfig();
+		ItemsFile.reload();
+		LootTablesFile.reload();
+		
+		CamsLootTables.getInstance().loadHandlers();
 		Messager.sendSuccessMessage(sender, ChatColor.GREEN + "Successfully reloaded CamsLootTables.");
 	}
 }
