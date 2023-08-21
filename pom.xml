@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>CamsLootTables</groupId>
 	<artifactId>CamsLootTables</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.1.2-SNAPSHOT</version>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
@@ -51,6 +51,10 @@
 			<id>papermc</id>
 			<url>https://papermc.io/repo/repository/maven-public/</url>
 		</repository>
+		<repository>
+			<id>maven-public</id>
+			<url>https://repo.auxilor.io/repository/maven-public/</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
@@ -66,6 +70,12 @@
 			<groupId>com.github.LoneDev6</groupId>
 			<artifactId>api-itemsadder</artifactId>
 			<version>VERSION</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.willfp</groupId>
+			<artifactId>EcoEnchants</artifactId>
+			<version>10.31.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

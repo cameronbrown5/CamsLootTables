@@ -4,12 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-import dev.lone.itemsadder.api.CustomStack;
-import me.thecamzone.Utils.DataFile;
+import me.thecamzone.Utils.ItemFactory;
+import me.thecamzone.Utils.LootTablesFile;
 import net.md_5.bungee.api.ChatColor;
 
 public class LootTableHandler {
@@ -27,10 +26,12 @@ public class LootTableHandler {
 	}
 	
 	public void load() {
-		ConfigurationSection lootTableSection = DataFile.get().getConfigurationSection("loottables");
+		lootTables.clear();
+		
+		ConfigurationSection lootTableSection = LootTablesFile.get().getConfigurationSection("loottables");
 
 		if(lootTableSection == null) {
-			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Invalid data.yml");
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Invalid loottables.yml");
 			return;
 		}
 		
@@ -66,54 +67,25 @@ public class LootTableHandler {
 					failed = true;
 				}
 				
-				String[] lootItemStackInfo = lootItemInfo[1].split(":");
-				String namespace;
-				String materialName;
-				
-				if(lootItemStackInfo.length == 0) {
+				String[] namespacedID = ItemFactory.convertNamespacedID(lootItemInfo[1]);
+				if(namespacedID.length == 0) {
 					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
 					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Invalid item entry for \"" + lootTableName + "\".");
 					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Invalid entry:");
-					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] \"" + lootItemStackInfo + "\"");
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] \"" + lootItemInfo[1] + "\"");
 					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
 					return;
 				}
-				else if(lootItemStackInfo.length == 2) {
-					namespace = lootItemStackInfo[0];
-					materialName = lootItemStackInfo[1];
-				} else {
-					namespace = "minecraft";
-					materialName = lootItemStackInfo[0];
-				}
+			
+				String namespace = namespacedID[0];
+				String materialName = namespacedID[1];
 				
-				ItemStack item = new ItemStack(Material.AIR);
-				
-				if(namespace.equalsIgnoreCase("minecraft")) {
-					Material material = Material.matchMaterial(materialName);
-					if(material == null) {
-						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
-						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Invalid item entry for \"" + lootTableName + "\".");
-						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] \"" + namespace + ":" + materialName + "\" is not a valid item stack.");
-						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Invalid entry:");
-						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] \"" + lootItemEntry + "\"");
-						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
-						failed = true;
-					}
-					
-					item = new ItemStack(material);
-				} else {
-					CustomStack stack = CustomStack.getInstance(namespace.toLowerCase() + ":" + materialName.toLowerCase());
-					if(stack == null) {
-						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
-						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Invalid item entry for \"" + lootTableName + "\".");
-						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] \"" + namespace + ":" + materialName + "\" is not a valid item stack from items adder.");
-						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Invalid entry:");
-						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] \"" + lootItemEntry + "\"");
-						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
-						failed = true;
-					}
-					
-					item = stack.getItemStack();
+				ItemStack item = ItemFactory.getItemStack(namespace, materialName);
+				if(item == null) {
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Invalid item entry for \"" + lootTableName + "\".");
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] \"" + namespace + ":" + materialName + "\" is not a valid item.");
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
 				}
 				
 				Double chance = 0D;

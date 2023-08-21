@@ -4,13 +4,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import dev.lone.itemsadder.api.Events.ItemsAdderLoadDataEvent;
-import me.thecamzone.LootTables.LootTableHandler;
+import me.thecamzone.CamsLootTables;
 
 public class OnItemsAdderLoaded implements Listener {
 
 	@EventHandler
 	public void onItemsAdderLoaded(ItemsAdderLoadDataEvent e) {
-		LootTableHandler.getInstance().load();
+		CamsLootTables.getInstance().loadHandlers();
 	}
 	
 }

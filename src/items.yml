@@ -1,0 +1,16 @@
+items:
+  enchanted_stick:
+    item: STICK
+    rarity:
+      poor:
+      - "enchant DURABILITY 1"
+      common:
+      - "enchant DURABILITY 2"
+      uncommon:
+      - "enchant DURABILITY 3"
+      rare:
+      - "enchant DURABILITY 4"
+      flawless:
+      - "enchant DURABILITY 5"
+          
+      

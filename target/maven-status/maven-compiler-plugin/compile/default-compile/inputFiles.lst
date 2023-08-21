@@ -4,8 +4,11 @@ C:\Users\Cameron\eclipse-workspace\CamsLootTables\src\me\thecamzone\Listeners\On
 C:\Users\Cameron\eclipse-workspace\CamsLootTables\src\me\thecamzone\Commands\CommandReload.java
 C:\Users\Cameron\eclipse-workspace\CamsLootTables\src\me\thecamzone\Utils\Messager.java
 C:\Users\Cameron\eclipse-workspace\CamsLootTables\src\me\thecamzone\Utils\StringUtil.java
+C:\Users\Cameron\eclipse-workspace\CamsLootTables\src\me\thecamzone\Rarities\RarityHandler.java
 C:\Users\Cameron\eclipse-workspace\CamsLootTables\src\me\thecamzone\Commands\CommandRunner.java
+C:\Users\Cameron\eclipse-workspace\CamsLootTables\src\me\thecamzone\Rarities\Rarity.java
 C:\Users\Cameron\eclipse-workspace\CamsLootTables\src\me\thecamzone\Utils\ItemFactory.java
+C:\Users\Cameron\eclipse-workspace\CamsLootTables\src\me\thecamzone\Utils\LootTablesFile.java
 C:\Users\Cameron\eclipse-workspace\CamsLootTables\src\me\thecamzone\Commands\CommandDebug.java
 C:\Users\Cameron\eclipse-workspace\CamsLootTables\src\me\thecamzone\LootTables\LootTableHandler.java
 C:\Users\Cameron\eclipse-workspace\CamsLootTables\src\me\thecamzone\Listeners\OnChunkGeneration.java
@@ -18,7 +21,9 @@ C:\Users\Cameron\eclipse-workspace\CamsLootTables\src\me\thecamzone\Utils\SignUt
 C:\Users\Cameron\eclipse-workspace\CamsLootTables\src\me\thecamzone\CamsLootTables.java
 C:\Users\Cameron\eclipse-workspace\CamsLootTables\src\me\thecamzone\Commands\CommandCompleter.java
 C:\Users\Cameron\eclipse-workspace\CamsLootTables\src\me\thecamzone\Commands\CommandHelp.java
-C:\Users\Cameron\eclipse-workspace\CamsLootTables\src\me\thecamzone\Utils\DataFile.java
+C:\Users\Cameron\eclipse-workspace\CamsLootTables\src\me\thecamzone\Rarities\RarityItemHandler.java
+C:\Users\Cameron\eclipse-workspace\CamsLootTables\src\me\thecamzone\Rarities\RarityItem.java
+C:\Users\Cameron\eclipse-workspace\CamsLootTables\src\me\thecamzone\Utils\ItemsFile.java
 C:\Users\Cameron\eclipse-workspace\CamsLootTables\src\me\thecamzone\Utils\SFXManager.java
 C:\Users\Cameron\eclipse-workspace\CamsLootTables\src\me\thecamzone\Listeners\OnItemsAdderLoaded.java
 C:\Users\Cameron\eclipse-workspace\CamsLootTables\src\me\thecamzone\Listeners\OnInventoryInteract.java

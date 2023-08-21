@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
 import me.thecamzone.CamsLootTables;
+import me.thecamzone.Utils.Messager;
 import me.thecamzone.Utils.SignUtils;
 import net.md_5.bungee.api.ChatColor;
 
@@ -66,9 +67,9 @@ public class OnPlayerInteract implements Listener {
 		Sign sign = (Sign) block.getState();
 		
 		if(SignUtils.replaceSign(sign)) {
-			player.sendMessage(ChatColor.GREEN + "Successfully created a LootTable chest.");
+			Messager.sendSuccessMessage(player, ChatColor.GREEN + "Successfully created a LootTable chest.");
 		} else {
-			player.sendMessage(ChatColor.RED + "Could not create a LootTable chest. Check console for information.");
+			Messager.sendErrorMessage(player, ChatColor.RED + "Could not create a LootTable chest. Check console for information.");
 		}
 	}
 	

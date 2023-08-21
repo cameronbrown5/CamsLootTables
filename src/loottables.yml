@@ -1,0 +1,16 @@
+loottables:
+  default:
+    items:
+    - "1 DIAMOND_SWORD 100.0%"
+    - "1 mcrpg:OPAL_SWORD 100.0%"
+  enchanted:
+    items:
+    - "1 ENCHANTED_STICK 100.0%"
+  stuff:
+    items:
+    - "1 DIAMOND 10.0%"
+    - "2 IRON_INGOT 50.0% 100.0% true"
+    - "5 GOLD_INGOT 30.0% 10.0%"
+    - "4 REDSTONE 20.0% 10.0%"
+    - "1 GLOWSTONE 100.0%"
+    - "64 NETHERITE_INGOT 1.0% 10.0% true"

@@ -1,7 +1,0 @@
-LootTables:
-  default:
-  	shaped: false
-  	items:
-  	- "1|DIAMOND_SWORD|100.0%"
-        
-        

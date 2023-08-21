@@ -2,7 +2,18 @@ package me.thecamzone.LootTables;
 
 import java.util.Random;
 
+import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
+
+import me.thecamzone.CamsLootTables;
+import me.thecamzone.Rarities.Rarity;
+import me.thecamzone.Rarities.RarityItem;
+import me.thecamzone.Rarities.RarityItemHandler;
+import me.thecamzone.Utils.ItemFactory;
 
 public class ItemStackChance {
 
@@ -21,6 +32,25 @@ public class ItemStackChance {
 	}
 
 	public ItemStack getItem() {
+		if(item.hasItemMeta()) {
+			ItemMeta itemMeta = item.getItemMeta();
+			PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+			NamespacedKey namespacedKey = CamsLootTables.getInstance().getRarityItemKey();
+			
+			if(pdc.has(namespacedKey, PersistentDataType.STRING)) {
+				RarityItem rarityItem = RarityItemHandler.getInstance().getRarityItem(pdc.get(namespacedKey, PersistentDataType.STRING));
+				
+				Rarity rarity = rarityItem.rollRarity();
+				rarityItem.setRarity(rarity);
+				
+				ItemStack enchantedItem = ItemFactory.parseArgs(rarityItem);
+				
+				ItemStack formattedItem = ItemFactory.formatRarityItem(enchantedItem, rarity);
+				
+				return formattedItem;
+			}
+		}
+		
 		return item;
 	}
 	
