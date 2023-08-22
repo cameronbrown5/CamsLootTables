@@ -1,6 +1,6 @@
 main: me.thecamzone.CamsLootTables
 name: CamsLootTables
-version: 0.1.2
+version: 0.1.3
 description: Provides gameplay mechanics for MCRPG.
 api-version: 1.19
 author: TheCamZone

@@ -2,7 +2,7 @@ package me.thecamzone.LootTables;
 
 import java.util.Random;
 
-import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -32,6 +32,10 @@ public class ItemStackChance {
 	}
 
 	public ItemStack getItem() {
+		if(item == null) {
+			return new ItemStack(Material.AIR);
+		}
+		
 		if(item.hasItemMeta()) {
 			ItemMeta itemMeta = item.getItemMeta();
 			PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();

@@ -7,7 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
 import me.thecamzone.Utils.ChunkUtil;
-import me.thecamzone.Utils.SignUtils;
+import me.thecamzone.Utils.BlockUtils;
 
 public class OnChunkGeneration implements Listener {
 	
@@ -22,7 +22,7 @@ public class OnChunkGeneration implements Listener {
 		ArrayList<Sign> signs = ChunkUtil.getChunkSigns(chunk);
 		
 		for(Sign sign : signs) {
-			SignUtils.replaceSign(sign);
+			BlockUtils.replaceSign(sign);
 		}
 	}
 	
