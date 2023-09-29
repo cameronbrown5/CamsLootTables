@@ -12,16 +12,11 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Container;
-import org.bukkit.block.DoubleChest;
 import org.bukkit.block.Sign;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.type.Chest.Type;
-import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import me.thecamzone.CamsLootTables;
 import me.thecamzone.LootTables.ItemStackChance;
 import me.thecamzone.LootTables.LootTable;
 import me.thecamzone.LootTables.LootTableHandler;
@@ -190,12 +185,16 @@ public class BlockUtils {
 		
 		setDirection(block, direction);
 		
-    	for(ItemStackChance itemStackChance : lootTable.getItems()) {
+    	fillInventory(getBlockInventory(blockState), lootTable);
+		
+		return true;
+	}
+	
+	public static void fillInventory(Inventory inventory, LootTable lootTable) {
+		for(ItemStackChance itemStackChance : lootTable.getItems()) {
 			if(!itemStackChance.rollChance()) {
 				continue;
 			}
-			
-			Inventory inventory = getBlockInventory(blockState);
 			
 			List<Integer> availableSlots = new ArrayList<>();
 			for(int i = 0; i < inventory.getSize(); i++) {
@@ -207,6 +206,13 @@ public class BlockUtils {
 			Collections.shuffle(availableSlots);
 			
 			ItemStack item = itemStackChance.getItem();
+			
+			if(item == null) {
+				Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+				Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Failed to parse arguments for an item.");
+				Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+				return;
+			}
 			
 			Integer quantity = itemStackChance.getQuantity();
 			if(!itemStackChance.isSpread()) {
@@ -226,8 +232,5 @@ public class BlockUtils {
 				}
 			}
 		}
-		
-		return true;
 	}
-	
 }

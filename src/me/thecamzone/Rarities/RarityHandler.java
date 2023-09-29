@@ -5,7 +5,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
 import me.thecamzone.CamsLootTables;
-import me.thecamzone.Utils.LootTablesFile;
 import me.thecamzone.Utils.StringUtil;
 import net.md_5.bungee.api.ChatColor;
 

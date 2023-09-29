@@ -11,7 +11,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import com.willfp.ecoenchants.enchants.EcoEnchants;
@@ -19,7 +18,6 @@ import com.willfp.ecoenchants.enchants.EcoEnchants;
 import dev.lone.itemsadder.api.CustomStack;
 import me.thecamzone.CamsLootTables;
 import me.thecamzone.Rarities.Rarity;
-import me.thecamzone.Rarities.RarityHandler;
 import me.thecamzone.Rarities.RarityItem;
 import me.thecamzone.Rarities.RarityItemHandler;
 import net.md_5.bungee.api.ChatColor;
@@ -57,6 +55,11 @@ public class ItemFactory {
 	}
 	
 	public static ItemStack formatRarityItem(ItemStack item, Rarity rarity) {
+		if(item == null) {
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Cannot format null item.");
+			return null;
+		}
+		
 		ItemStack localItem = item.clone();
 		
 		ItemMeta itemMeta = localItem.getItemMeta();
@@ -125,6 +128,24 @@ public class ItemFactory {
 			}
 
 			if (args[0].equalsIgnoreCase("enchant")) {
+				if(args[1].contains("(")) {
+					String parsedString = FunctionsUtil.parseStringFunction(args[1]);
+					if(parsedString == null) {
+						return null;
+					}
+					
+					args[1] = parsedString;
+				}
+				
+				
+				if(args[2].contains("(")) {
+					Integer parsedInteger = FunctionsUtil.parseIntegerFunction(args[2]);
+					if(parsedInteger == null) {
+						return null;
+					}
+					
+					args[2] = parsedInteger.toString();
+				}
 				Integer level;
 				try {
 					level = Integer.parseInt(args[2]);
@@ -197,6 +218,10 @@ public class ItemFactory {
 	
 	@SuppressWarnings("deprecation")
 	public static ItemStack enchantItem(ItemStack item, String enchantmentName, Integer level) {
+		if(enchantmentName.equalsIgnoreCase("none")) {
+			return item;
+		}
+		
 		String namespace;
 		String enchantmentString;
 		if(enchantmentName.contains(":")) {
@@ -232,12 +257,14 @@ public class ItemFactory {
 			return null;
 		}
 		
-		ItemMeta meta = item.getItemMeta();
-		
-		if(meta instanceof EnchantmentStorageMeta) {
-			EnchantmentStorageMeta enchantmentMeta = (EnchantmentStorageMeta) meta;
-			enchantmentMeta.addStoredEnchant(enchantment, level, true);
-			item.setItemMeta(enchantmentMeta);
+		if(item.hasItemMeta()) {
+			ItemMeta meta = item.getItemMeta();
+			
+			if(meta instanceof EnchantmentStorageMeta) {
+				EnchantmentStorageMeta enchantmentMeta = (EnchantmentStorageMeta) meta;
+				enchantmentMeta.addStoredEnchant(enchantment, level, true);
+				item.setItemMeta(enchantmentMeta);
+			}
 		}
 		
 		item.addUnsafeEnchantment(enchantment, level);

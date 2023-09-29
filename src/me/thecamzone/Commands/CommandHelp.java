@@ -8,7 +8,7 @@ public class CommandHelp extends LootTableCommand {
 	public CommandHelp() {
 		setName("help");
 		setInfoMessage("Displays this list.");
-		setPermission("loottable.help");
+		setPermission("camsloottables.admin");
 		setArgumentLength(1);
 		setUsageMessage("/lt help");
 		setUniversalCommand(true);

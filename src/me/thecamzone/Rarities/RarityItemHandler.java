@@ -89,19 +89,6 @@ public class RarityItemHandler {
 			items.put(itemName, rarityItem);
 		}
 	}
-
-	public ItemStack getItem(String itemName) {
-		RarityItem item = items.get(itemName);
-		
-		if(item == null) {
-			return null;
-		}
-		
-		Rarity rarity = item.rollRarity();
-		item.setRarity(rarity);
-		
-		return item.getItem();
-	}
 	
 	public HashMap<String, RarityItem> getRarityItems() {
 		return items;

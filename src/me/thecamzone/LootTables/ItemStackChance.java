@@ -2,6 +2,7 @@ package me.thecamzone.LootTables;
 
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -14,6 +15,7 @@ import me.thecamzone.Rarities.Rarity;
 import me.thecamzone.Rarities.RarityItem;
 import me.thecamzone.Rarities.RarityItemHandler;
 import me.thecamzone.Utils.ItemFactory;
+import net.md_5.bungee.api.ChatColor;
 
 public class ItemStackChance {
 
@@ -49,7 +51,14 @@ public class ItemStackChance {
 				
 				ItemStack enchantedItem = ItemFactory.parseArgs(rarityItem);
 				
+ 				if(enchantedItem == null) {
+ 					return null;
+ 				}
+				
 				ItemStack formattedItem = ItemFactory.formatRarityItem(enchantedItem, rarity);
+				if(formattedItem == null) {
+ 					return null;
+ 				}
 				
 				return formattedItem;
 			}
