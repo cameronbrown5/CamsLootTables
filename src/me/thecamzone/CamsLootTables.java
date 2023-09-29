@@ -84,6 +84,7 @@ public class CamsLootTables extends JavaPlugin {
             	RarityHandler.getInstance().load();
         		RarityItemHandler.getInstance().load();
         		LootTableHandler.getInstance().load();
+        		LootTableHandler.getInstance().loadInheritance();
             }
         },1L);
 	}

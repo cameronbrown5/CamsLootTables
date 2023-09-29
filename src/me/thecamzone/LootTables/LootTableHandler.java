@@ -136,6 +136,29 @@ public class LootTableHandler {
 		Bukkit.getConsoleSender().sendMessage("[CamsLootTables] Loaded loot tables.");
 	}
 	
+	public void loadInheritance() {
+		ConfigurationSection lootTableSection = LootTablesFile.get().getConfigurationSection("loottables");
+
+		if(lootTableSection == null) {
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Invalid loottables.yml");
+			return;
+		}
+		
+		for (String lootTableName : lootTableSection.getKeys(false)) {
+			List<String> lootTableInheritances = lootTableSection.getStringList(lootTableName + ".inherits");
+			
+			for(String inheritance : lootTableInheritances) {
+				LootTable inheritedLootTable = lootTables.get(inheritance);
+				
+				if(!lootTables.get(lootTableName).getInherits().contains(inheritedLootTable)) {
+					lootTables.get(lootTableName).addInheritedLootTable(inheritedLootTable);
+				}
+			}
+		}
+		
+		Bukkit.getConsoleSender().sendMessage("[CamsLootTables] Loaded inheritance.");
+	}
+	
 	public LootTable getLootTable(String lootTableName) {
 		if(!lootTables.containsKey(lootTableName)) {
 			return null;
