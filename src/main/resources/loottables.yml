@@ -6,6 +6,11 @@ loottables:
   enchanted:
     items:
     - "1 ENCHANTED_STICK 100.0%"
+  potions:
+    items:
+      - "1 STRENGTH_SPLASH_POTION 100.0%"
+      - "1 RANDOM_POTION 100.0%"
+      - "1 RANDOM_LINGERING_POTION 100.0%"
   stuff:
     items:
     - "1 DIAMOND 10.0%"

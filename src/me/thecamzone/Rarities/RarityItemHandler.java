@@ -1,15 +1,19 @@
 package me.thecamzone.Rarities;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 import me.thecamzone.Utils.ItemFactory;
 import me.thecamzone.Utils.ItemsFile;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffectType;
 
 public class RarityItemHandler {
 
@@ -65,7 +69,29 @@ public class RarityItemHandler {
 				Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
 				continue;
 			}
-			
+
+//			if(potionMaterials.contains(item.getType())) {
+//				String configEffect = itemsSection.getString(itemName + ".potion-effect");
+//
+//				if(configEffect == null) {
+//					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+//					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Potion item was specified for " + itemName + "\" in items.yml, but no potion effect was specified.");
+//					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Specify a potion effect by adding a \"potion-effect: <PotionEffectType>\" line under the item type.");
+//					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] You can find potion effect IDs here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html");
+//					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+//					continue;
+//				}
+//
+//				PotionEffectType effectType = PotionEffectType.getByName(configEffect);
+//
+//				if(effectType == null) {
+//					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+//					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Could not find potion effect type \"" + configEffect + "\" for " + itemName + "\" in items.yml");
+//					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+//					continue;
+//				}
+//			}
+
 			HashMap<Rarity, List<String>> rarityArgs = new HashMap<>();
 			
 			ConfigurationSection raritiesSection = itemsSection.getConfigurationSection(itemName + ".rarity");

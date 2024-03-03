@@ -1,26 +1,31 @@
 package me.thecamzone.Utils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
-
-import com.willfp.ecoenchants.enchants.EcoEnchants;
-
+import com.willfp.ecoenchants.enchant.EcoEnchants;
 import dev.lone.itemsadder.api.CustomStack;
 import me.thecamzone.CamsLootTables;
 import me.thecamzone.Rarities.Rarity;
 import me.thecamzone.Rarities.RarityItem;
 import me.thecamzone.Rarities.RarityItemHandler;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 public class ItemFactory {
 
@@ -63,6 +68,7 @@ public class ItemFactory {
 		ItemStack localItem = item.clone();
 		
 		ItemMeta itemMeta = localItem.getItemMeta();
+
 		List<String> lore = itemMeta.getLore();
 		if (lore == null) {
 			lore = new ArrayList<>();
@@ -89,7 +95,16 @@ public class ItemFactory {
 	
 	public static ItemStack parseArgs(RarityItem item) {
 		ItemStack localItem = item.getItem().clone();
-		
+		ItemMeta itemMeta = localItem.getItemMeta();
+
+		if(itemMeta == null) {
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+			Bukkit.getConsoleSender().sendMessage(
+					ChatColor.RED + "[CamsLootTables] Item specified in \"" + item.getName() + "\" cannot be modified.");
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+			return localItem;
+		}
+
 		for (String arg : item.getRarityArgs(item.getRarity())) {
 			String[] args = arg.split(" ");
 			if (args.length == 0) {
@@ -133,20 +148,19 @@ public class ItemFactory {
 					if(parsedString == null) {
 						return null;
 					}
-					
+
 					args[1] = parsedString;
 				}
-				
-				
+
 				if(args[2].contains("(")) {
 					Integer parsedInteger = FunctionsUtil.parseIntegerFunction(args[2]);
 					if(parsedInteger == null) {
 						return null;
 					}
-					
+
 					args[2] = parsedInteger.toString();
 				}
-				Integer level;
+				int level;
 				try {
 					level = Integer.parseInt(args[2]);
 				} catch (NumberFormatException e) {
@@ -160,20 +174,212 @@ public class ItemFactory {
 
 				localItem = ItemFactory.enchantItem(localItem, args[1], level);
 			}
-//			else if(args[0].equalsIgnoreCase("attribute")) {
-//				Integer level;
-//				try {
-//					level = Integer.parseInt(args[2]);
-//				} catch (NumberFormatException e) {
-//					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
-//					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Invalid integer for \"" + name + "\" in items.yml.");
-//					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Integer given: " + args[2]);
-//					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
-//					continue;
-//				}
-//				
-//				localItem = ItemFactory.enchantItem(localItem, args[1], level);
-//			} 
+			else if(args[0].equalsIgnoreCase("addAttribute")) {
+				if(args[1].contains("(")) {
+					String parsedString = FunctionsUtil.parseStringFunction(args[1]);
+					if(parsedString == null) {
+						return null;
+					}
+
+					args[1] = parsedString;
+				}
+
+				Attribute attribute;
+				try {
+					attribute = Attribute.valueOf(args[1]);
+				} catch (IllegalArgumentException e) {
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+					Bukkit.getConsoleSender().sendMessage(
+							ChatColor.RED + "[CamsLootTables] Invalid attribute for \"" + item.getName() + "\" in items.yml.");
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Attribute given: " + args[1]);
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+					continue;
+				}
+
+				int modifier;
+				try {
+					modifier = Integer.parseInt(args[2]);
+				} catch (NumberFormatException e) {
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+					Bukkit.getConsoleSender().sendMessage(
+							ChatColor.RED + "[CamsLootTables] Invalid integer for \"" + item.getName() + "\" in items.yml.");
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Integer given: " + args[2]);
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+					continue;
+				}
+
+				if(args[3].contains("(")) {
+					String parsedString = FunctionsUtil.parseStringFunction(args[3]);
+					if(parsedString == null) {
+						return null;
+					}
+
+					args[3] = parsedString;
+				}
+
+				EquipmentSlot slot = null;
+				if(!args[3].equalsIgnoreCase("ALL")) {
+					try {
+						slot = EquipmentSlot.valueOf(args[3]);
+					} catch (IllegalArgumentException e) {
+						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+						Bukkit.getConsoleSender().sendMessage(
+								ChatColor.RED + "[CamsLootTables] Invalid EquipmentSlot for \"" + item.getName() + "\" in items.yml.");
+						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] EquipmentSlot given: " + args[3]);
+						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Expected HAND | OFF_HAND | HEAD | CHEST | LEGS | FEET | ALL");
+						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+						continue;
+					}
+				}
+
+				AttributeModifier attributeModifier;
+				if(args[3].equalsIgnoreCase("ALL") || slot == null) {
+					attributeModifier = new AttributeModifier("modifier", modifier, AttributeModifier.Operation.ADD_NUMBER);
+				} else {
+					attributeModifier = new AttributeModifier(UUID.randomUUID(), "modifier", modifier, AttributeModifier.Operation.ADD_NUMBER, slot);
+				}
+
+				itemMeta.addAttributeModifier(attribute, attributeModifier);
+
+				localItem.setItemMeta(itemMeta);
+			}
+			else if(args[0].equalsIgnoreCase("setName")) {
+				String[] modifiedArray = Arrays.copyOfRange(args, 1, args.length);
+				String name = String.join(" ", modifiedArray);
+				name = ChatColor.translateAlternateColorCodes('&', name);
+
+				itemMeta.setDisplayName(name);
+
+				localItem.setItemMeta(itemMeta);
+			}
+			else if(args[0].equalsIgnoreCase("addPotionEffect")) {
+				List<Material> potionMaterials = Arrays.asList(Material.POTION, Material.LINGERING_POTION, Material.SPLASH_POTION);
+
+				if(!potionMaterials.contains(localItem.getType())) {
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+					Bukkit.getConsoleSender().sendMessage(
+							ChatColor.RED + "[CamsLootTables] Invalid argument for \"" + item.getName() + "\" in items.yml.");
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Item is not a potion type. Cannot add potion effect to a non-potion item.");
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+					continue;
+				}
+
+				if(args[1].contains("(")) {
+					String parsedString = FunctionsUtil.parseStringFunction(args[1]);
+					if(parsedString == null) {
+						return null;
+					}
+
+					args[1] = parsedString;
+				}
+
+				PotionEffectType effectType = PotionEffectType.getByName(args[1]);
+
+				if(effectType == null) {
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Could not find potion effect type \"" + args[1] + "\" for " + item.getName() + "\" in items.yml");
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+					continue;
+				}
+
+				if(args[2].contains("(")) {
+					Integer parsedInteger = FunctionsUtil.parseIntegerFunction(args[2]);
+					if(parsedInteger == null) {
+						return null;
+					}
+
+					args[2] = parsedInteger.toString();
+				}
+
+				int duration;
+				try {
+					duration = Integer.parseInt(args[2]);
+				} catch (NumberFormatException e) {
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+					Bukkit.getConsoleSender().sendMessage(
+							ChatColor.RED + "[CamsLootTables] Invalid integer for \"" + item.getName() + "\" in items.yml.");
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Integer given: " + args[2]);
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+					continue;
+				}
+
+				if(args[3].contains("(")) {
+					Integer parsedInteger = FunctionsUtil.parseIntegerFunction(args[3]);
+					if(parsedInteger == null) {
+						return null;
+					}
+
+					args[3] = parsedInteger.toString();
+				}
+
+				int amplifier;
+				try {
+					amplifier = Integer.parseInt(args[3]);
+				} catch (NumberFormatException e) {
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+					Bukkit.getConsoleSender().sendMessage(
+							ChatColor.RED + "[CamsLootTables] Invalid integer for \"" + item.getName() + "\" in items.yml.");
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Integer given: " + args[3]);
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+					continue;
+				}
+
+				boolean ambient = false;
+				if(args[4] != null) {
+					if(!(args[4].equalsIgnoreCase("true") || args[4].equalsIgnoreCase("false"))) {
+						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+						Bukkit.getConsoleSender().sendMessage(
+								ChatColor.RED + "[CamsLootTables] Invalid boolean for \"" + item.getName() + "\" in items.yml.");
+						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Boolean given: " + args[4]);
+						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Expected: true/false");
+						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+					} else {
+						ambient = Boolean.parseBoolean(args[4]);
+					}
+				}
+
+				boolean particles = true;
+				if(args[5] != null) {
+					if(!(args[5].equalsIgnoreCase("true") || args[5].equalsIgnoreCase("false"))) {
+						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+						Bukkit.getConsoleSender().sendMessage(
+								ChatColor.RED + "[CamsLootTables] Invalid boolean for \"" + item.getName() + "\" in items.yml.");
+						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Boolean given: " + args[5]);
+						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Expected: true/false");
+						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+					} else {
+						particles = Boolean.parseBoolean(args[5]);
+					}
+				}
+
+				boolean icon = true;
+				if(args[6] != null) {
+					if(!(args[6].equalsIgnoreCase("true") || args[6].equalsIgnoreCase("false"))) {
+						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+						Bukkit.getConsoleSender().sendMessage(
+								ChatColor.RED + "[CamsLootTables] Invalid boolean for \"" + item.getName() + "\" in items.yml.");
+						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Boolean given: " + args[6]);
+						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Expected: true/false");
+						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+					} else {
+						icon = Boolean.parseBoolean(args[6]);
+					}
+				}
+
+				PotionMeta potionMeta = (PotionMeta) localItem.getItemMeta();
+				if(potionMeta == null) {
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+					Bukkit.getConsoleSender().sendMessage(
+							ChatColor.RED + "[CamsLootTables] Invalid argument for \"" + item.getName() + "\" in items.yml.");
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Item is not a potion type. Cannot add potion effect to a non-potion item.");
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+					continue;
+				}
+
+				potionMeta.addCustomEffect(new PotionEffect(effectType, duration * 20, amplifier, ambient, particles, icon), true);
+
+				localItem.setItemMeta(potionMeta);
+			}
 			else {
 				Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
 				Bukkit.getConsoleSender().sendMessage(
@@ -182,19 +388,20 @@ public class ItemFactory {
 				Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] \"" + arg + "\"");
 				Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Valid argument types:");
 				Bukkit.getConsoleSender()
-						.sendMessage(ChatColor.RED + "[CamsLootTables] enchant | attribute | modifier");
+						.sendMessage(ChatColor.RED + "[CamsLootTables] enchant | addAttribute | addPotionEffect | setName");
 				Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
 				continue;
 			}
 		}
+
 		return localItem;
 	}
 	
 	public static ItemStack getItemStack(String namespace, String materialName) {
 		ItemStack item = new ItemStack(Material.AIR);
-		
+
 		if(RarityItemHandler.getInstance().getRarityItems().containsKey(materialName.toLowerCase())) {
-			return RarityItemHandler.getInstance().getRarityItem(materialName).getItem();
+			return RarityItemHandler.getInstance().getRarityItem(materialName.toLowerCase()).getItem();
 		}
 		
 		if(namespace.equalsIgnoreCase("minecraft")) {
@@ -242,12 +449,13 @@ public class ItemFactory {
 		}
 		
 		Enchantment enchantment = null;
-		
-		if(namespace.equalsIgnoreCase("minecraft")) {
-			enchantment = Enchantment.getByName(enchantmentString);
-		} else if(namespace.equalsIgnoreCase("ecoenchants")) {
-			enchantment = EcoEnchants.getByID(enchantmentString.toLowerCase());
-		}
+		enchantment = Enchantment.getByName(enchantmentString);
+//		if(namespace.equalsIgnoreCase("minecraft")) {
+//			enchantment = Enchantment.getByName(enchantmentString);
+//		} else if(namespace.equalsIgnoreCase("ecoenchants")) {
+//
+//			enchantment = EcoEnchants.INSTANCE.getByName(enchantmentString.toLowerCase()).getEnchantment();
+//		}
 		
 		if(enchantment == null) {
 			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");

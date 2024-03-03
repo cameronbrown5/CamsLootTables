@@ -52,7 +52,7 @@ public class ItemStackChance {
 				ItemStack enchantedItem = ItemFactory.parseArgs(rarityItem);
 				
  				if(enchantedItem == null) {
- 					return null;
+					 return null;
  				}
 				
 				ItemStack formattedItem = ItemFactory.formatRarityItem(enchantedItem, rarity);

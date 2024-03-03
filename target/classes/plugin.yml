@@ -1,8 +1,8 @@
 main: me.thecamzone.CamsLootTables
 name: CamsLootTables
-version: 2.0.0
+version: 2.2.1
 description: Provides custom loot tables for generated structures.
-api-version: 1.19
+api-version: 1.20
 author: TheCamZone
 depend: [ItemsAdder, EcoEnchants, NBTAPI]
 

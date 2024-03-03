@@ -3,9 +3,6 @@ package me.thecamzone.LootTables;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-
 public class LootTable {
 
 	private String displayName;

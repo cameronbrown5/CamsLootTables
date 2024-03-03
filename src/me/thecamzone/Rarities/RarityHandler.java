@@ -72,6 +72,8 @@ public class RarityHandler {
 			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
 			return;
 		}
+
+		tempRarities.put("all", new Rarity(null, null, null));
 		
 		rarities = tempRarities;
 		Bukkit.getConsoleSender().sendMessage("[CamsLootTables] Loaded rarities.");

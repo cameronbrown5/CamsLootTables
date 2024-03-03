@@ -22,7 +22,7 @@ public class OnChunkGeneration implements Listener {
 		ArrayList<Sign> signs = ChunkUtil.getChunkSigns(chunk);
 		
 		for(Sign sign : signs) {
-			BlockUtils.replaceSign(sign);
+			BlockUtils.replaceSign(sign, false);
 		}
 	}
 	

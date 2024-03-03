@@ -1,12 +1,6 @@
 package me.thecamzone.Rarities;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
@@ -50,13 +44,19 @@ public class RarityItem extends ItemStack {
 	}
 
 	public List<String> getRarityArgs(Rarity rarity) {
-		return rarities.getOrDefault(rarity, new ArrayList<String>());
+		List<String> rarityArgs = rarities.getOrDefault(rarity, new ArrayList<>());
+		List<String> allArgs = rarities.getOrDefault(RarityHandler.getInstance().getRarity("all"), new ArrayList<>());
+
+		rarityArgs.addAll(allArgs);
+
+		return rarityArgs;
 	}
 
 	public Rarity rollRarity() {
 		int totalChances = 0;
 
-		Set<Rarity> availableRarities = rarities.keySet();
+		Set<Rarity> availableRarities = new HashSet<Rarity>(rarities.keySet());
+		availableRarities.remove(RarityHandler.getInstance().getRarity("all"));
 
 		if(availableRarities.size() == 0) {
 			Bukkit.getConsoleSender().sendMessage("No available rarities");

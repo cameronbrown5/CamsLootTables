@@ -98,16 +98,19 @@ public class BlockUtils {
         chest2.update(true);
 	}
 	
-	public static boolean replaceSign(Sign sign) {
+	public static boolean replaceSign(Sign sign, Boolean debug) {
 		if(sign == null) {
 			return false;
 		}
 		
 		if(!sign.getLine(0).equalsIgnoreCase("[LootTable]")) {
-			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
-			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] This sign is not a loot table sign.");
-			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Sign location: (world: " + sign.getWorld().getName() + ") " + sign.getX() + ", " + sign.getY() + ", " + sign.getZ() + ".");
-			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+			if(debug) {
+				Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+				Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] This sign is not a loot table sign.");
+				Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[CamsLootTables] Sign location: (world: " + sign.getWorld().getName() + ") " + sign.getX() + ", " + sign.getY() + ", " + sign.getZ() + ".");
+				Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "-------------------------");
+			}
+
 			return false;
 		}
 		
